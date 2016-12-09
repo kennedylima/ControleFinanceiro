@@ -1,0 +1,49 @@
+<ion-view view-title="Movimentação" cache-view="false" ng-cloak>
+  <ion-content ng-controller="MovimentacaoController" >
+    <form name="form" layout="column" layout-padding>
+
+        <md-input-container  class="md-block">
+          <strong>Tipo</strong>
+          <md-input-container>
+            <md-radio-group  ng-model="movimentacao.tipo" layout="row" required>
+              <md-radio-button value="{{despesa}}" class="md-primary" name="despesa">Despesa</md-radio-button>
+              <md-radio-button value="{{receita}}" class="md-primary" name="receita"> Receita</md-radio-button>
+            </md-radio-group>
+          </md-input-container>
+          <div ng-show="requerido && userForm.radioSexo.$invalid " ng-message="required">Campo Obrigatorio.</div>
+        </md-input-container>
+
+      <md-input-container >
+      <label>Categoria</label>
+      <md-select ng-model="movimentacao.categoria"  required>
+        <md-option ng-repeat="categoria in categorias"  ng-value="categoria" ng-selected="movimentacao.categoria.id == categoria.id" >
+          {{categoria.descricao}}
+        </md-option>
+      </md-select>
+      </md-input-container>
+
+      <md-input-container >
+        <label>Descricao</label>
+        <input ng-model="movimentacao.descricao" >
+        <div ng-show="requerido && form.nome.$invalid " ng-message="required">Campo  Obrigatorio.</div>
+      </md-input-container>
+
+      <md-input-container >
+        <label>Valor</label>
+        <input ng-model="movimentacao.valor"  ui-money-mask required>
+        <div ng-show="requerido && form.nome.$invalid " ng-message="required">Campo  Obrigatorio.</div>
+      </md-input-container>
+
+      <md-input-container >
+        <label>Data</label>
+        <md-datepicker ng-model="movimentacao.data" md-placeholder="Insira uma data" required></md-datepicker>
+        <div ng-show="requerido" ng-message="required" style="font-family: Arial; color:#d9301c;font-size:12px" >Campo Obrigatorio.</div>
+      </md-input-container>
+
+      <md-button class="md-primary md-raised" ng-disabled="form.$invalid" ng-click="salvar()"> Salvar</md-button>
+
+
+    </form>
+  </ion-content>
+</ion-view>
+

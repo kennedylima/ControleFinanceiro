@@ -1,0 +1,46 @@
+<ion-view view-title="Movimentações" cache-view="false"  ng-cloak>
+
+  <ion-nav-buttons side="right" layout-align="center">
+      <a class="button button-icon icon ion-ios-plus-empty" ng-click="adiconar()"></a>
+  </ion-nav-buttons>
+
+  <ion-content ng-controller="MovimentacaoController" >
+    <div layout="row" style="background-color: #e6e6e6" layout-padding >
+      <div layout="column" layout-align="center center">
+        <strong>Total Receita:</strong>
+        <span class="receita">{{totalReceita| currency : R$}}</span>
+      </div>
+      <span flex></span>
+      <div layout="column" layout-align="center center">
+        <strong>Total Despesa:</strong>
+        <span class="despesa">{{totalDespesa| currency : R$}}</span>
+      </div>
+      <span flex></span>
+      <div layout="column" layout-align="center center">
+        <strong>Saldo:</strong>
+        <span class="saldo">{{saldo| currency : R$}}</span>
+      </div>
+    </div>
+
+    <ion-list >
+      <ion-item ng-repeat="movimentacao in movimentacoes | orderBy:'data'" ng-click="editar(movimentacao)">
+        <div layout="row" layout-align="center center" >
+          <h3>{{movimentacao.data | date:'dd/MM/yyyy'}}</h3>
+          <span flex></span>
+          <div layout-align="center center" layout="column">
+            <h3>{{movimentacao.descricao}}</h3>
+            <h3>{{movimentacao.categoria.descricao}}</h3>
+          </div>
+          <span flex></span>
+          <h3 ng-class='{despesa : movimentacao.tipo == "DESPESA", receita : movimentacao.tipo == "RECEITA"}'>{{movimentacao.valor | currency : R$}}</h3>
+          <md-button class="md-icon-button" ng-click="excluir(movimentacao.id)">
+            <md-icon class="ion-ios-trash"></md-icon>
+          </md-button>
+        </div>
+
+
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-view>
