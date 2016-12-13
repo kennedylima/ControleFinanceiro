@@ -1,5 +1,6 @@
 controleFinanceiroAPP.service('CategoriaService', function ($http, $q) {
 
+  var categoria = {};
   this.buscarTodas = function () {
     var defer = $q.defer();
     $http.get("http://localhost:8080/categoria")
@@ -30,6 +31,29 @@ controleFinanceiroAPP.service('CategoriaService', function ($http, $q) {
         }
       );
     return defer.promise;
+  }
+
+  this.excluir = function (id) {
+    var defer = $q.defer();
+    $http.delete("http://localhost:8080/categoria/"+id)
+      .then(
+        function(response){
+          defer.resolve(response);
+
+        },
+        function(errResponse){
+          console.error('Erro ao remover');
+          defer.reject(errResponse);
+        }
+      );
+    return defer.promise;
+  }
+  this.setCategoria = function (categoria) {
+    this.categoria = categoria;
+  }
+
+  this.getCategoria = function () {
+    return this.categoria;
   }
 })
 

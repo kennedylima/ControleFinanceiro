@@ -7,6 +7,10 @@
         <div ng-show="requerido && form.nome.$invalid " ng-message="required">Campo  Obrigatorio.</div>
       </md-input-container>
 
+      <md-input-container >
+        <input ng-model="categoria.valorMaximo"  ui-money-mask placeholder="Quanto você pode gastar com esta categoria ?">
+      </md-input-container>
+
       <md-button class="md-primary md-raised" ng-click="salvar()"> Salvar</md-button>
     </div>
   </ion-content>

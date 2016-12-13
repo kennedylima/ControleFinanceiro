@@ -40,7 +40,7 @@
         <div ng-show="requerido" ng-message="required" style="font-family: Arial; color:#d9301c;font-size:12px" >Campo Obrigatorio.</div>
       </md-input-container>
 
-      <md-button class="md-primary md-raised" ng-disabled="form.$invalid" ng-click="salvar()"> Salvar</md-button>
+      <md-button class="md-primary md-raised" ng-disabled="form.$invalid" ng-click="salvar($event)"> Salvar</md-button>
 
 
     </form>

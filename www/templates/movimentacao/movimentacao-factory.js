@@ -13,5 +13,6 @@ controleFinanceiroAPP.factory("MovimentacaoFactory",function (MovimentacaoServic
           }
         )
   }
+
   return movimentacoes;
 });

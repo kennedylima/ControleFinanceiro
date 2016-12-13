@@ -33,6 +33,22 @@ controleFinanceiroAPP.service('MovimentacaoService', function ($http, $q) {
     return defer.promise;
   }
 
+  this.excluir = function (id) {
+    var defer = $q.defer();
+    $http.delete("http://localhost:8080/movimentacao/"+id)
+      .then(
+        function(response){
+          defer.resolve(response);
+
+        },
+        function(errResponse){
+          console.error('Erro ao excluir movimentacao');
+          defer.reject(errResponse);
+        }
+      );
+    return defer.promise;
+  }
+
   this.setMovimentacao = function (movimentacao) {
     this.movimentacao = movimentacao;
   }

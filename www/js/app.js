@@ -4,10 +4,11 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngMaterial','ngAria','ngAnimate','ui.utils.masks','chart.js'])
+var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngCordova','ngMaterial','ngAria','ngAnimate','ui.utils.masks','chart.js'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform,$cordovaSQLite,$cordovaToast,$rootScope) {
   $ionicPlatform.ready(function() {
+    $rootScope.banco = null;
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -15,11 +16,30 @@ var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngMat
       cordova.plugins.Keyboard.disableScroll(true);
 
     }
+
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    if(ionic.Platform.isAndroid()) {
+      $rootScope.banco = $cordovaSQLite.openDB({name: "ControleFinanceiro", location: "default"});
+      var criarTabelaCategoria = "CREATE TABLE IF NOT EXISTS categoria " +
+        "(id integer primary key autoincrement, descricao varchar(100) not null, valorMaximo real)";
+
+      $cordovaToast.showShortBottom("Criando Tabela");
+      $cordovaSQLite.execute($rootScope.bd, criarTabelaCategoria)
+        .then(function (response) {
+            $cordovaToast.showShortBottom("Categoria Criada");
+          }, function (error) {
+            console.log(JSON.stringify(error));
+            $cordovaToast.showShortBottom("Erro = " + JSON.stringify(error));
+          }
+        )
+    }
+
   });
+
 })
 
 .config(function($stateProvider,$urlRouterProvider,$locationProvider,$mdThemingProvider) {
@@ -47,6 +67,11 @@ var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngMat
       url: '/categorias',
       templateUrl: 'templates/categoria/categorias.html',
       controller: 'CategoriaController'
+  })
+    .state('relatorio', {
+      url: '/relatorio',
+      templateUrl: 'templates/relatorio/relatorio.html',
+      controller: 'RelatorioController'
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/');
