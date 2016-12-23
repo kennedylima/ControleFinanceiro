@@ -1,38 +1,42 @@
-<ion-view view-title="Movimentações"  cache-view="false"  ng-cloak>
+<ion-view view-title='Movimentações' cache-view="false"  ng-cloak>
 
-  <ion-nav-buttons side="right" layout-align="center">
+  <ion-nav-buttons  side="right" layout-align="center">
       <a class="button button-icon icon ion-ios-plus-empty" ng-click="adicionar()"></a>
   </ion-nav-buttons>
 
-  <ion-content ng-controller="MovimentacaoController" >
-    <div layout="row" style="background-color: #e6e6e6" layout-padding >
-      <div layout="column" layout-align="center center">
-        <strong>Total Receita:</strong>
+  <ion-content class="conteudo" ng-controller="MovimentacaoController" >
+    <md-card layout="row" layout-padding>
+      <div layout="column" layout-align="start center" >
+        <strong>Total Receita</strong>
         <span class="receita">{{totalReceita| currency : R$}}</span>
       </div>
       <span flex></span>
       <div layout="column" layout-align="center center">
-        <strong>Total Despesa:</strong>
+        <strong>Total Despesa</strong>
         <span class="despesa">{{totalDespesa| currency : R$}}</span>
       </div>
       <span flex></span>
-      <div layout="column" layout-align="center center">
-        <strong>Saldo:</strong>
+      <div layout="column" layout-align="end center">
+        <strong>Saldo</strong>
         <span class="saldo">{{saldo| currency : R$}}</span>
       </div>
-    </div>
+    </md-card>
 
-    <ion-list layout-margin>
-      <ion-item ng-repeat="movimentacao in movimentacoes | orderBy:'data'" >
-        <div layout="row" layout-align="center center" ng-click="editar(movimentacao)" on-hold="excluir(movimentacao.id)" >
-          <h3 >{{movimentacao.data | date:'dd/MM/yyyy'}}</h3>
+    <ion-list>
+      <ion-item class="ion-item" ng-repeat="movimentacao in movimentacoes | orderBy:'dataFormatada'"  on-hold="excluir(movimentacao,$event)" layout-margin>
+        <div layout="row" layout-align="center center" on-tap="editar(movimentacao,$event)" >
+          <div layout-align="start center" layout="column">
+          <h4>{{movimentacao.dataFormatada | date:'dd/MM/yyyy'}}</h4>
+          </div>
           <span flex > </span>
           <div layout-align="center center" layout="column">
-            <h3>{{movimentacao.descricao}}</h3>
-            <h3>{{movimentacao.categoria.descricao}}</h3>
+            <strong>{{movimentacao.descricao}}</strong>
+            <strong>{{movimentacao.categoria.descricao}}</strong>
           </div>
           <span flex ></span>
-          <h3 ng-class='{despesa : movimentacao.tipo == "DESPESA", receita : movimentacao.tipo == "RECEITA"}'>{{movimentacao.valor | currency : R$}}</h3>
+          <div layout-align="end center" layout="column">
+            <h3 ng-class='{despesa : movimentacao.tipo == "DESPESA", receita : movimentacao.tipo == "RECEITA"}'>{{movimentacao.valor | currency : R$}}</h3>
+          </div>
         </div>
       </ion-item>
     </ion-list>

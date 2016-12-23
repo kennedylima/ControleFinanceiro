@@ -1,4 +1,4 @@
-<ion-view view-title="Movimentação" ng-cloak>
+<ion-view view-title="Categoria" ng-cloak>
   <ion-content ng-controller="CategoriaController">
     <div layout="column" layout-padding>
       <md-input-container >
@@ -8,10 +8,10 @@
       </md-input-container>
 
       <md-input-container >
-        <input ng-model="categoria.valorMaximo"  ui-money-mask placeholder="Quanto você pode gastar com esta categoria ?">
+        <input ng-model="categoria.valorMaximo"  ui-money-mask placeholder="Quanto você gostaria de gastar com esta categoria ?">
       </md-input-container>
 
-      <md-button class="md-primary md-raised" ng-click="salvar()"> Salvar</md-button>
+      <md-button class="button button-dark" ng-click="salvar()"> Salvar</md-button>
     </div>
   </ion-content>
 </ion-view>

@@ -6,9 +6,10 @@
 // 'starter.controllers' is found in controllers.js
 var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngCordova','ngMaterial','ngAria','ngAnimate','ui.utils.masks','chart.js'])
 
-.run(function($ionicPlatform,$cordovaSQLite,$cordovaToast,$rootScope) {
+.run(function($ionicPlatform,$cordovaSQLite,$cordovaToast,$rootScope,$cordovaSplashscreen) {
+
   $ionicPlatform.ready(function() {
-    $rootScope.banco = null;
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -22,22 +23,33 @@ var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngCor
       StatusBar.styleDefault();
     }
 
-    if(ionic.Platform.isAndroid()) {
-      $rootScope.banco = $cordovaSQLite.openDB({name: "ControleFinanceiro", location: "default"});
-      var criarTabelaCategoria = "CREATE TABLE IF NOT EXISTS categoria " +
-        "(id integer primary key autoincrement, descricao varchar(100) not null, valorMaximo real)";
+    setTimeout(function() {
+      navigator.splashscreen.hide();
+    }, 10000)
 
-      $cordovaToast.showShortBottom("Criando Tabela");
-      $cordovaSQLite.execute($rootScope.bd, criarTabelaCategoria)
-        .then(function (response) {
-            $cordovaToast.showShortBottom("Categoria Criada");
-          }, function (error) {
-            console.log(JSON.stringify(error));
-            $cordovaToast.showShortBottom("Erro = " + JSON.stringify(error));
-          }
-        )
-    }
+    $rootScope.banco = $cordovaSQLite.openDB({name: "ControleFinanceiro", location: "default"});
+    var criarTabelaCategoria = "CREATE TABLE IF NOT EXISTS categoria " +
+      "(id integer primary key autoincrement, descricao varchar(100) not null, valorMaximo real)";
 
+
+    $cordovaSQLite.execute($rootScope.banco, criarTabelaCategoria)
+      .then(function (response) {
+          console.log("Tebela Categoria criada com sucesso");
+        }, function (error) {
+          console.log("Erro = " + JSON.stringify(error));
+        }
+      )
+
+    var criarTabelaMovimentacao = "CREATE TABLE IF NOT EXISTS movimentacao (" +
+      "id integer primary key autoincrement, tipo text,descricao varchar(100)," +
+      "data integer, categoria_id integer, valor real, FOREIGN KEY(categoria_id) REFERENCES categoria(id))";
+    $cordovaSQLite.execute($rootScope.banco, criarTabelaMovimentacao)
+      .then(function (response) {
+          console.log("Tebela Movimentacao criada com sucesso");
+        }, function (error) {
+          console.log("Erro = " + JSON.stringify(error));
+        }
+      )
   });
 
 })
@@ -45,7 +57,8 @@ var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngCor
 .config(function($stateProvider,$urlRouterProvider,$locationProvider,$mdThemingProvider) {
 
   $mdThemingProvider.theme('default')
-    .primaryPalette('blue');
+    .primaryPalette('blue')
+    .accentPalette('grey');
 
   $stateProvider
     .state('movimentacoes', {
@@ -75,7 +88,7 @@ var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngCor
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/');
-  $locationProvider.html5Mode({enabled: true, requireBase: false});
+  //$locationProvider.html5Mode({enabled: true, requireBase: false});
 })
 
 .config(['$mdDateLocaleProvider', CalendarConfig]);

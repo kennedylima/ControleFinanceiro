@@ -7,7 +7,7 @@ controleFinanceiroAPP.controller('AppController', function($scope, $ionicModal, 
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  // Form data for the login modal
+  /* Form data for the login modal
   $scope.loginData = {};
 
   // Create the login modal that we will use later
@@ -36,21 +36,7 @@ controleFinanceiroAPP.controller('AppController', function($scope, $ionicModal, 
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
-  };
+  };*/
 
 
 })
-
-controleFinanceiroAPP.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-controleFinanceiroAPP.controller('PlaylistCtrl', function($scope, $stateParams) {
-});

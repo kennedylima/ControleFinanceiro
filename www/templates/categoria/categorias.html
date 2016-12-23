@@ -4,16 +4,13 @@
   </ion-nav-buttons>
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="categoria in categorias" layout="row">
-        <span flex="10" ng-click="editar(categoria)" ></span>
-        <span flex ng-click="editar(categoria)" ></span>
-        <div layout="row" layout-align="center center" ng-click="editar(categoria)" >
+      <ion-item class="ion-item" ng-repeat="categoria in categorias" layout="row" on-hold="excluir(categoria.id,$event)" layout-margin>
+        <span flex on-tap="editar(categoria)" ></span>
+        <div layout="column"  layout-margin layout-align="center center" on-tap="editar(categoria)" >
           <h3>{{categoria.descricao}}</h3>
+          <h5>{{categoria.valorMaximo |  currency : R$}}</h5>
         </div>
-        <span flex ng-click="editar(categoria)" ></span>
-        <md-button class="md-icon-button" aria-label="Excluir" layout-align="center center">
-          <md-icon class="ion-ios-trash" ng-click="excluir(categoria.id,$event)"></md-icon>
-        </md-button>
+        <span flex on-tap="editar(categoria)" ></span>
       </ion-item>
     </ion-list>
   </ion-content>

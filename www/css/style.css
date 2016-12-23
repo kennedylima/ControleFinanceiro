@@ -1,5 +1,5 @@
 ::-webkit-scrollbar{
-  width:0px;
+  /*width:0px;*/
 }
 
 .despesa{
@@ -15,4 +15,35 @@
 .saldo{
   color:#1E90FF;
   font-weight: bold;
+}
+
+.ion-item {
+  border-radius: 5px;
+}
+
+.ion-item > div > div > h4 {
+  font-weight: bold;
+  font-family: Roboto;
+  font-size: 12px;
+}
+
+
+md-card{
+  border-radius: 5px;
+}
+
+.conteudo{
+}
+
+strong{
+  font-family: Roboto;
+  font-size: 14px;
+  color: #212121;
+
+}
+
+.IconeNaBarraDeTitulo{
+  whith: 10px;
+  margin-top: 5%;
+  icon: url("../img/dinheiro.png");
 }

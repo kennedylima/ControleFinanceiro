@@ -30,8 +30,8 @@
 
       <md-input-container >
         <label>Valor</label>
-        <input ng-model="movimentacao.valor"  ui-money-mask required>
-        <div ng-show="requerido && form.nome.$invalid " ng-message="required">Campo  Obrigatorio.</div>
+        <input ng-model="movimentacao.valor" ui-money-mask required>
+        <div ng-show="requerido && form.nome.$invalid "  ng-message="required">Campo  Obrigatorio.</div>
       </md-input-container>
 
       <md-input-container >
@@ -40,7 +40,7 @@
         <div ng-show="requerido" ng-message="required" style="font-family: Arial; color:#d9301c;font-size:12px" >Campo Obrigatorio.</div>
       </md-input-container>
 
-      <md-button class="md-primary md-raised" ng-disabled="form.$invalid" ng-click="salvar($event)"> Salvar</md-button>
+      <md-button class="button button-dark "  ng-click="salvar($event)"> Salvar</md-button>
 
 
     </form>
