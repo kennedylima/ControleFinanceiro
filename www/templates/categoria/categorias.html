@@ -7,8 +7,8 @@
       <ion-item class="ion-item" ng-repeat="categoria in categorias" layout="row" on-hold="excluir(categoria.id,$event)" layout-margin>
         <span flex on-tap="editar(categoria)" ></span>
         <div layout="column"  layout-margin layout-align="center center" on-tap="editar(categoria)" >
-          <h3>{{categoria.descricao}}</h3>
-          <h5>{{categoria.valorMaximo |  currency : R$}}</h5>
+          <strong>{{categoria.descricao}}</strong>
+          <h4>{{categoria.valorMaximo |  currency : R$}}</h4>
         </div>
         <span flex on-tap="editar(categoria)" ></span>
       </ion-item>

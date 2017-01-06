@@ -11,23 +11,80 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
     $scope.saldo = 0;
     $scope.totalDespesaPorCategoria = 0;
     $scope.categorias = [];
+
+    $scope.mesVigente = new Date();
+
     var eventoDialog= {};
     var movimentacao = {};
+    var primeiroDiaDoMes = undefined;
+    var ultimoDiaDoMes = undefined;
 
+    var getUltimoDiaDoMes = function (data) {
+      return new Date(data.getFullYear(), data.getMonth() + 1, 0, 23, 59, 59);
+    }
+
+    var getPrimeiroDiaDoMes = function (data) {
+      return new Date(data.getFullYear(), data.getMonth(), 1);
+    }
+
+    $scope.mesAnterior = function () {
+     $scope.mesVigente.setMonth( $scope.mesVigente.getMonth()-1);
+      console.log("Mes Anterior ------------------------------");
+      console.log("Primeiro dia Mes "+primeiroDiaDoMes);
+      //console.log("Mes vigente -1 "+$scope.mesVigente.getMonth()-1);
+      console.log("Mes vigente "+$scope.mesVigente);
+      primeiroDiaDoMes = new Date($scope.mesVigente.getFullYear(), $scope.mesVigente.getMonth(), 1);
+      ultimoDiaDoMes = new Date($scope.mesVigente.getFullYear(), $scope.mesVigente.getMonth() + 1, 0, 23, 59, 59);
+      $scope.buscarMovimentacoes();
+      console.log("Mes Anterior ------------------------------");
+      console.log("Primeiro dia do mês "+primeiroDiaDoMes);
+      console.log("Ultimo dia do mês "+ultimoDiaDoMes);
+      console.log("Mes Anterior ------------------------------");
+    }
+
+    $scope.mesPosterior = function () {
+      $scope.mesVigente.setMonth($scope.mesVigente.getMonth()+1);
+      primeiroDiaDoMes = new Date($scope.mesVigente.getFullYear(), $scope.mesVigente.getMonth(), 1);
+      ultimoDiaDoMes = new Date($scope.mesVigente.getFullYear(), $scope.mesVigente.getMonth() + 1, 0, 23, 59, 59);
+      $scope.buscarMovimentacoes();
+      console.log("Mes Posterior ------------------------------");
+      console.log("Primeiro dia do mês "+primeiroDiaDoMes);
+      console.log("Ultimo dia do mês "+ultimoDiaDoMes);
+      console.log("Mes Posterior ------------------------------");
+    }
+
+
+    if(primeiroDiaDoMes == undefined){
+      primeiroDiaDoMes = getPrimeiroDiaDoMes(new Date());
+      ultimoDiaDoMes = getUltimoDiaDoMes(new Date());
+      $scope.mesVigente = primeiroDiaDoMes;
+      console.log("Primeiro dia"+primeiroDiaDoMes);
+      console.log("Mes vigente"+$scope.mesVigente);
+    }
 
     $scope.buscarMovimentacoes = function () {
       $scope.movimentacoes = [];
       if (ionic.Platform.isAndroid()) {
         var query = "SELECT * FROM movimentacao";
+        console.log("Data -1 = "+primeiroDiaDoMes.getDate() -1);
+        //var query = "SELECT * FROM movimentacao WHERE data  BETWEEN "+primeiroDiaDoMes.getTime()+" AND  "+ultimoDiaDoMes.getTime()+"";
+        console.log(query);
         $cordovaSQLite.execute($rootScope.banco, query)
           .then(function (res) {
+            console.log(res.rows.item(0));
             if ($scope.movimentacoes.length != res.rows.length) {
               for (var i = 0; i < res.rows.length; i++) {
                 movimentacao = res.rows.item(i);
+                movimentacao.data = new Date(movimentacao.data);
                 movimentacao.dataFormatada = Date.parse(movimentacao.data);
                 //$scope.movimentacao.dataFormatada = $filter('date')($scope.movimentacao.dataFormatada, "dd/MM/yyyy");
                 buscarCategoriaPor(movimentacao);
               }
+            }
+            if(res.rows.length == 0){
+              $scope.totalDespesa = 0;
+              $scope.totalReceita = 0;
+              $scope.saldo = 0;
             }
           }, function (error) {
             console.log(error);
@@ -75,6 +132,7 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
 
 
     $scope.salvar = function (evento) {
+      $scope.movimentacao.data = $scope.movimentacao.data.getTime();
       eventoDialog = evento;
       if (ionic.Platform.isAndroid()) {
         if ($scope.movimentacao.id != undefined) {
@@ -146,11 +204,11 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
         buttons: [
           {
             text: 'Não',
-            type: 'button-assertive'
+            type: 'button-positive'
           },
           {
             text: '<b>Sim</b>',
-            type: 'button-positive',
+            type: 'button-assertive',
             onTap: function (e) {
 
               if (ionic.Platform.isAndroid()) {

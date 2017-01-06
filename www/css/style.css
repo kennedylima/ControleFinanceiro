@@ -25,6 +25,7 @@
   font-weight: bold;
   font-family: Roboto;
   font-size: 12px;
+  color: #404a50;
 }
 
 
@@ -38,7 +39,7 @@ md-card{
 strong{
   font-family: Roboto;
   font-size: 14px;
-  color: #212121;
+  color: #404a50;
 
 }
 
@@ -47,3 +48,56 @@ strong{
   margin-top: 5%;
   icon: url("../img/dinheiro.png");
 }
+
+.bar.bar-stable {
+  border-color: #404a50 !important;
+  background-color: #2dbdac !important;
+  background-image: linear-gradient(0deg, #2dbdac, #2dbdac 50%, transparent 50%) !important;
+  color: #444 !important;}
+.bar.bar-stable .title {
+  color: #ffffff !important; }
+.bar.bar-stable.bar-footer {
+  background-image: linear-gradient(180deg, #b2b2b2, #b2b2b2 50%, transparent 50%)!important; }
+
+
+.menu {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  min-height: 100%;
+  max-height: 100%;
+  width: 275px;
+  background-color: #404a50; !important;}
+.menu .scroll-content {
+  z-index: 10; }
+.menu .bar-header {
+  z-index: 11; }
+
+.item-content{
+  background-color: #404a50 !important;
+  border-color: #ffffff !important;
+
+}
+
+.item-divider{
+  background-color: transparent !important;
+}
+
+.icone-branco{
+  color: #ffffff;
+}
+
+.menu-texto{
+  color: #ffffff;
+}
+
+.button-icon{
+  color: #ffffff !important;
+}
+
+.botao {
+  color: #ffffff !important;
+}
+

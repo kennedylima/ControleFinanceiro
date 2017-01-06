@@ -1,17 +1,17 @@
 <ion-view view-title="Categoria" ng-cloak>
   <ion-content ng-controller="CategoriaController">
-    <div layout="column" layout-padding>
+    <form name="form" layout="column" layout-padding>
       <md-input-container >
         <label>Descricao</label>
         <input ng-model="categoria.descricao" required>
-        <div ng-show="requerido && form.nome.$invalid " ng-message="required">Campo  Obrigatorio.</div>
+        <div ng-show="requerido" ng-message="required">Campo  Obrigatorio.</div>
       </md-input-container>
 
       <md-input-container >
         <input ng-model="categoria.valorMaximo"  ui-money-mask placeholder="Quanto você gostaria de gastar com esta categoria ?">
       </md-input-container>
 
-      <md-button class="button button-dark" ng-click="salvar()"> Salvar</md-button>
-    </div>
+      <md-button class="md-raised md-primary botao"  ng-disabled="form.$invalid" ng-click="salvar()"> Salvar</md-button>
+    </form>
   </ion-content>
 </ion-view>

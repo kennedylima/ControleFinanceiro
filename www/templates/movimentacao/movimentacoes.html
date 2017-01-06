@@ -1,11 +1,12 @@
-<ion-view view-title='Movimentações' cache-view="false"  ng-cloak>
+<ion-view view-title='Movimentações' cache-view="false"  ng-cloak >
 
   <ion-nav-buttons  side="right" layout-align="center">
       <a class="button button-icon icon ion-ios-plus-empty" ng-click="adicionar()"></a>
   </ion-nav-buttons>
 
-  <ion-content class="conteudo" ng-controller="MovimentacaoController" >
-    <md-card layout="row" layout-padding>
+  <ion-content class="conteudo" ng-controller="MovimentacaoController" on-swipe-right="mesAnterior()" on-swipe-left="mesPosterior()">
+
+    <div class="item-divider" layout="row" layout-padding >
       <div layout="column" layout-align="start center" >
         <strong>Total Receita</strong>
         <span class="receita">{{totalReceita| currency : R$}}</span>
@@ -20,13 +21,22 @@
         <strong>Saldo</strong>
         <span class="saldo">{{saldo| currency : R$}}</span>
       </div>
-    </md-card>
+    </div>
+
+    <div layout="row" layout-padding>
+      <a class=" icon ion-ios-arrow-left" layout-align="start center" ng-click="mesAnterior()"></a>
+      <span flex ></span>
+      <strong flex="nogrow" layout-align="center center"> {{mesVigente | date:'MMMM yyyy' | uppercase}}</strong>
+      <span flex ></span>
+      <a class="icon ion-ios-arrow-right" layout-align="end center" ng-click="mesPosterior()"></a>
+    </div>
 
     <ion-list>
-      <ion-item class="ion-item" ng-repeat="movimentacao in movimentacoes | orderBy:'dataFormatada'"  on-hold="excluir(movimentacao,$event)" layout-margin>
-        <div layout="row" layout-align="center center" on-tap="editar(movimentacao,$event)" >
+      <ion-item class="ion-item"  ng-repeat="movimentacao in movimentacoes | orderBy:'dataFormatada'"  on-hold="excluir(movimentacao,$event)" layout-margin>
+        <div  layout="row" layout-align="center center" on-tap="editar(movimentacao,$event)" >
           <div layout-align="start center" layout="column">
-          <h4>{{movimentacao.dataFormatada | date:'dd/MM/yyyy'}}</h4>
+          <h4>{{movimentacao.dataFormatada | date:'dd'}}</h4>
+          <h4>{{movimentacao.dataFormatada | date:'MMM'  | uppercase}}</h4>
           </div>
           <span flex > </span>
           <div layout-align="center center" layout="column">

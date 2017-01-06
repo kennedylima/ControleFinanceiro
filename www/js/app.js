@@ -56,9 +56,26 @@ var controleFinanceiroAPP = angular.module('controleFinanceiro', ['ionic','ngCor
 
 .config(function($stateProvider,$urlRouterProvider,$locationProvider,$mdThemingProvider) {
 
+  $mdThemingProvider.definePalette('Controle Financeiro', {
+    '50': 'E0F2F1',
+    '100': 'ffcdd2',
+    '200': 'ef9a9a',
+    '300': 'e57373',
+    '400': 'ef5350',
+    '500': '2dbdac',
+    '600': '00897B',
+    '700': '00796B',
+    '800': '00695C',
+    '900': 'b71c1c',
+    'A100': 'ff8a80',
+    'A200': 'ff5252',
+    'A400': 'ff1744',
+    'A700': 'd50000',
+  });
+
   $mdThemingProvider.theme('default')
-    .primaryPalette('blue')
-    .accentPalette('grey');
+    .primaryPalette('Controle Financeiro')
+
 
   $stateProvider
     .state('movimentacoes', {
