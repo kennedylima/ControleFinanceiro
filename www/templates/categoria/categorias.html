@@ -4,7 +4,7 @@
   </ion-nav-buttons>
   <ion-content>
     <ion-list>
-      <ion-item class="ion-item" ng-repeat="categoria in categorias" layout="row" on-hold="excluir(categoria.id,$event)" layout-margin>
+      <ion-item class="ion-item" ng-repeat="categoria in categorias | orderBy:'descricao'" layout="row" on-hold="excluir(categoria.id,$event)" layout-margin>
         <span flex on-tap="editar(categoria)" ></span>
         <div layout="column"  layout-margin layout-align="center center" on-tap="editar(categoria)" >
           <strong>{{categoria.descricao}}</strong>

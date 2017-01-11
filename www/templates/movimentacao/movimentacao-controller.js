@@ -65,9 +65,8 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
     $scope.buscarMovimentacoes = function () {
       $scope.movimentacoes = [];
       if (ionic.Platform.isAndroid()) {
-        var query = "SELECT * FROM movimentacao";
-        console.log("Data -1 = "+primeiroDiaDoMes.getDate() -1);
-        //var query = "SELECT * FROM movimentacao WHERE data  BETWEEN "+primeiroDiaDoMes.getTime()+" AND  "+ultimoDiaDoMes.getTime()+"";
+        //var query = "SELECT * FROM movimentacao";
+        var query = "SELECT * FROM movimentacao WHERE data  BETWEEN "+primeiroDiaDoMes.getTime()+" AND  "+ultimoDiaDoMes.getTime()+"";
         console.log(query);
         $cordovaSQLite.execute($rootScope.banco, query)
           .then(function (res) {

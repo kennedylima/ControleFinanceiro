@@ -16,7 +16,7 @@
       <md-input-container >
       <label>Categoria</label>
       <md-select ng-model="movimentacao.categoria"  required>
-        <md-option ng-repeat="categoria in categorias"  ng-value="categoria" ng-selected="movimentacao.categoria.id == categoria.id" >
+        <md-option ng-repeat="categoria in categorias | orderBy:'descricao'"  ng-value="categoria" ng-selected="movimentacao.categoria.id == categoria.id" >
           {{categoria.descricao}}
         </md-option>
       </md-select>
