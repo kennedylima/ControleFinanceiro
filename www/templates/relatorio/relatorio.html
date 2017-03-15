@@ -1,6 +1,7 @@
 <ion-view view-title="Relatório" cache-view="false" ng-cloak>
-  <ion-content ng-controller="RelatorioController" >
+  <ion-content>
     <div class="card"  flex layout-padding layout-margin>
+
       <div layout="row" layout-align="start center">
         <strong>Gastos por Categoria</strong>
         <md-button class="md-icon-button" aria-label="Grafico em Linha" ng-click="graficoEmLinha()">
@@ -15,9 +16,8 @@
           <md-icon md-svg-icon="./img/icon/ic_grafico_pizza.svg"></md-icon>
         </md-button>
       </div>
-      <div>
-        <canvas id="relatorio"></canvas>
-      </div>
+
+      <div id="divRelatorio"></div>
     </div>
   </ion-content>
 </ion-view>

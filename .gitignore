@@ -5,3 +5,7 @@
 *.ipr
 plugins/
 platforms/
+node_modules/
+hooks/
+resources/
+

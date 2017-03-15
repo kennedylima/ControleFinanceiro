@@ -1,4 +1,4 @@
-controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $rootScope,$state,$http,$filter,$window,$ionicPopup,$ionicPlatform,$cordovaToast,$cordovaSQLite,$filter,$mdDialog,MovimentacaoService,MovimentacaoFactory,CategoriaFactory) {
+controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $rootScope,$state,$http,$filter,$window,$ionicPopup,$ionicPlatform,$cordovaToast,$cordovaSQLite,$filter,$mdDialog,MovimentacaoService,MovimentacaoFactory,CategoriaFactory, CategoriaService) {
   $ionicPlatform.ready(function () {
 
     $scope.receita = "RECEITA";
@@ -29,28 +29,16 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
 
     $scope.mesAnterior = function () {
      $scope.mesVigente.setMonth( $scope.mesVigente.getMonth()-1);
-      console.log("Mes Anterior ------------------------------");
-      console.log("Primeiro dia Mes "+primeiroDiaDoMes);
-      //console.log("Mes vigente -1 "+$scope.mesVigente.getMonth()-1);
-      console.log("Mes vigente "+$scope.mesVigente);
       primeiroDiaDoMes = new Date($scope.mesVigente.getFullYear(), $scope.mesVigente.getMonth(), 1);
       ultimoDiaDoMes = new Date($scope.mesVigente.getFullYear(), $scope.mesVigente.getMonth() + 1, 0, 23, 59, 59);
-      $scope.buscarMovimentacoes();
-      console.log("Mes Anterior ------------------------------");
-      console.log("Primeiro dia do mês "+primeiroDiaDoMes);
-      console.log("Ultimo dia do mês "+ultimoDiaDoMes);
-      console.log("Mes Anterior ------------------------------");
+      buscarMovimentacoes();
     }
 
     $scope.mesPosterior = function () {
       $scope.mesVigente.setMonth($scope.mesVigente.getMonth()+1);
       primeiroDiaDoMes = new Date($scope.mesVigente.getFullYear(), $scope.mesVigente.getMonth(), 1);
       ultimoDiaDoMes = new Date($scope.mesVigente.getFullYear(), $scope.mesVigente.getMonth() + 1, 0, 23, 59, 59);
-      $scope.buscarMovimentacoes();
-      console.log("Mes Posterior ------------------------------");
-      console.log("Primeiro dia do mês "+primeiroDiaDoMes);
-      console.log("Ultimo dia do mês "+ultimoDiaDoMes);
-      console.log("Mes Posterior ------------------------------");
+      buscarMovimentacoes();
     }
 
 
@@ -58,26 +46,48 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
       primeiroDiaDoMes = getPrimeiroDiaDoMes(new Date());
       ultimoDiaDoMes = getUltimoDiaDoMes(new Date());
       $scope.mesVigente = primeiroDiaDoMes;
-      console.log("Primeiro dia"+primeiroDiaDoMes);
-      console.log("Mes vigente"+$scope.mesVigente);
     }
 
-    $scope.buscarMovimentacoes = function () {
+    var buscarCategorias = function () {
+      if (ionic.Platform.isAndroid()) {
+        var query = "SELECT * FROM categoria";
+        $cordovaSQLite.execute($rootScope.banco, query)
+          .then(function (res) {
+            if ($scope.categorias.length != res.rows.length) {
+              for (var i = 0; i < res.rows.length; i++) {
+                $scope.categorias.push(res.rows.item(i));
+              }
+            }
+
+            CategoriaService.setCategorias($scope.categorias);
+          }, function (error) {
+            console.log(error);
+          });
+
+      } else {
+        CategoriaFactory.buscarTodas(function (response, error) {
+          if (!error) {
+            $scope.categorias = response;
+          }
+        })
+      }
+    }
+
+
+    var buscarMovimentacoes = function () {
       $scope.movimentacoes = [];
       if (ionic.Platform.isAndroid()) {
         //var query = "SELECT * FROM movimentacao";
         var query = "SELECT * FROM movimentacao WHERE data  BETWEEN "+primeiroDiaDoMes.getTime()+" AND  "+ultimoDiaDoMes.getTime()+"";
-        console.log(query);
         $cordovaSQLite.execute($rootScope.banco, query)
           .then(function (res) {
-            console.log(res.rows.item(0));
             if ($scope.movimentacoes.length != res.rows.length) {
               for (var i = 0; i < res.rows.length; i++) {
                 movimentacao = res.rows.item(i);
                 movimentacao.data = new Date(movimentacao.data);
                 movimentacao.dataFormatada = Date.parse(movimentacao.data);
-                //$scope.movimentacao.dataFormatada = $filter('date')($scope.movimentacao.dataFormatada, "dd/MM/yyyy");
                 buscarCategoriaPor(movimentacao);
+                calcularReceitaDespesaESaldo();
               }
             }
             if(res.rows.length == 0){
@@ -85,9 +95,12 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
               $scope.totalReceita = 0;
               $scope.saldo = 0;
             }
+
+            MovimentacaoService.setMovimentacoes($scope.movimentacoes);
           }, function (error) {
             console.log(error);
           });
+
       } else {
         MovimentacaoFactory.buscarTodas(function (response, error) {
           if (!error) {
@@ -97,26 +110,6 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
           }
         });
       }
-    }
-
-    if (ionic.Platform.isAndroid()) {
-      var query = "SELECT * FROM categoria";
-      $cordovaSQLite.execute($rootScope.banco, query)
-        .then(function (res) {
-          if ($scope.categorias.length != res.rows.length) {
-            for (var i = 0; i < res.rows.length; i++) {
-              $scope.categorias.push(res.rows.item(i));
-            }
-          }
-        }, function (error) {
-          console.log(error);
-        });
-    } else {
-      CategoriaFactory.buscarTodas(function (response, error) {
-        if (!error) {
-          $scope.categorias = response;
-        }
-      })
     }
 
 
@@ -132,26 +125,11 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
 
     $scope.salvar = function (evento) {
       $scope.movimentacao.data = $scope.movimentacao.data.getTime();
-      eventoDialog = evento;
       if (ionic.Platform.isAndroid()) {
+        eventoDialog = evento;
+
         if ($scope.movimentacao.id != undefined) {
-          var query = "UPDATE movimentacao SET tipo=?,descricao=?,data=?,categoria_id=?,valor=? WHERE id=?";
-          $cordovaSQLite.execute($rootScope.banco, query,
-            [ $scope.movimentacao.tipo,
-              $scope.movimentacao.descricao,
-              $scope.movimentacao.data,
-              $scope.movimentacao.categoria.id,
-              $scope.movimentacao.valor,
-              $scope.movimentacao.id])
-            .then(function (res) {
-              console.log(res.rows.item(0));
-              MovimentacaoService.setMovimentacao(undefined);
-              var index = $scope.movimentacoes.indexOf($scope.movimentacao);
-              $scope.movimentacoes[index] = $scope.movimentacoes;
-              $state.go('movimentacoes');
-            }, function (error) {
-              console.log(error);
-            });
+          alterar();
 
         } else {
           var query = "INSERT INTO movimentacao (tipo,descricao ,data, categoria_id,valor) VALUES(?,?,?,?,?)";
@@ -189,8 +167,31 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
       }
     }
 
+    var alterar = function () {
+      var query = "UPDATE movimentacao SET tipo=?,descricao=?,data=?,categoria_id=?,valor=? WHERE id=?";
+      $cordovaSQLite.execute($rootScope.banco, query,
+        [ $scope.movimentacao.tipo,
+          $scope.movimentacao.descricao,
+          $scope.movimentacao.data,
+          $scope.movimentacao.categoria.id,
+          $scope.movimentacao.valor,
+          $scope.movimentacao.id])
+
+        .then(function (res) {
+          MovimentacaoService.setMovimentacao(undefined);
+          var index = $scope.movimentacoes.indexOf($scope.movimentacao);
+          $scope.movimentacoes[index] = $scope.movimentacoes;
+          $state.go('movimentacoes');
+
+        }, function (error) {
+          console.log(error);
+        });
+    }
+
     $scope.adicionar = function () {
-      MovimentacaoService.setMovimentacao(undefined);
+      var movimentacao = {};
+      movimentacao.data = new Date();
+      MovimentacaoService.setMovimentacao(movimentacao);
       $state.go("movimentacao");
     }
 
@@ -209,7 +210,6 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
             text: '<b>Sim</b>',
             type: 'button-assertive',
             onTap: function (e) {
-
               if (ionic.Platform.isAndroid()) {
                   var query = "DELETE FROM movimentacao WHERE id="+movimentacao.id;
                   $cordovaSQLite.execute($rootScope.banco, query)
@@ -221,6 +221,7 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
                     },function (err) {
                       console.log(err);
                     });
+
               }else {
                 MovimentacaoService.excluir(id)
                   .then(function (response) {
@@ -230,8 +231,6 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
                     console.log(error);
                   })
               }
-
-
             }
           }
         ]
@@ -243,7 +242,6 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
       calcularReceita();
       calcularSaldo();
     }
-
 
 
     var calcularDespesa = function () {
@@ -272,11 +270,12 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
       if ($scope.movimentacoes.length > 0) {
         angular.forEach($scope.movimentacoes, function (movimentacao) {
           if($scope.movimentacao.categoria == undefined){
-            angular.forEach($scope.categorias, function (categoria) {
+            buscarCategoriaPor(movimentacao);
+            /*angular.forEach($scope.categorias, function (categoria) {
               if (movimentacao.categoria_id == categoria.id ) {
                 movimentacao.categoria = categoria;
               }
-            });
+            });*/
           }
           else if (movimentacao.categoria.id == categoria.id) {
             $scope.totalDespesaPorCategoria += movimentacao.valor;
@@ -286,20 +285,8 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
 
 
         if($scope.totalDespesaPorCategoria > $scope.movimentacao.categoria.valorMaximo && $scope.movimentacao.categoria.valorMaximo != null) {
-          var valorExcedido = $scope.totalDespesaPorCategoria - $scope.movimentacao.categoria.valorMaximo;
-          valorExcedido = $filter('currency')(valorExcedido, "R$:", 2);
-          $mdDialog.show(
-            $mdDialog.alert()
-              .clickOutsideToClose(true)
-              .title('Atenção !')
-              .textContent('Você gastou com ' + $scope.movimentacao.categoria.descricao + ' ' + valorExcedido + ' a mais que o esperado !')
-              .ariaLabel('Alerta de Gasto')
-              .ok('OK, Entendi')
-              .targetEvent(eventoDialog)
-          );
+          alertaDeGasto();
         }
-
-
 
       } else {
         $scope.totalDespesaPorCategoria += movimentacao.valor;
@@ -308,7 +295,17 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
 
     var buscarCategoriaPor = function (movimentacao) {
       if(movimentacao.categoria == undefined) {
-        var query = "SELECT * FROM categoria WHERE id=" + movimentacao.categoria_id + ";";
+        angular.forEach($scope.categorias, function (categoria) {
+            if(movimentacao.categoria_id == categoria.id){
+              //movimentacao.categoria = {};
+              movimentacao.categoria = categoria;
+              $scope.movimentacoes.push(movimentacao);
+              //calcularReceitaDespesaESaldo(movimentacao);
+            }
+        })
+
+
+        /*var query = "SELECT * FROM categoria WHERE id=" + movimentacao.categoria_id + ";";
         $cordovaSQLite.execute($rootScope.banco, query)
           .then(function (res) {
             movimentacao.categoria = {};
@@ -319,13 +316,25 @@ controleFinanceiroAPP.controller("MovimentacaoController", function ($scope, $ro
 
           }, function (error) {
             console.log(error);
-          });
+          });*/
       }
     }
 
+    var alertaDeGasto = function () {
+      var valorExcedido = $scope.totalDespesaPorCategoria - $scope.movimentacao.categoria.valorMaximo;
+      valorExcedido = $filter('currency')(valorExcedido, "R$:", 2);
+      $mdDialog.show(
+        $mdDialog.alert()
+          .clickOutsideToClose(true)
+          .title('Atenção !')
+          .textContent('Você gastou com ' + $scope.movimentacao.categoria.descricao + ' ' + valorExcedido + ' a mais que o esperado !')
+          .ariaLabel('Alerta de Gasto')
+          .ok('OK, Entendi')
+          .targetEvent(eventoDialog)
+      );
+    }
 
-
-
-    $scope.buscarMovimentacoes();
+    buscarCategorias();
+    buscarMovimentacoes();
   });
 })

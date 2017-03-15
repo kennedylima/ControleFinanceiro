@@ -1,6 +1,5 @@
 controleFinanceiroAPP.service('CategoriaService', function ($http, $q) {
 
-  var categoria = {};
   this.buscarTodas = function () {
     var defer = $q.defer();
     $http.get("http://localhost:8080/categoria")
@@ -54,6 +53,14 @@ controleFinanceiroAPP.service('CategoriaService', function ($http, $q) {
 
   this.getCategoria = function () {
     return this.categoria;
+  }
+
+  this.setCategorias = function (categorias) {
+    this.categorias = categorias;
+  }
+
+  this.getCategorias = function () {
+    return this.categorias;
   }
 })
 

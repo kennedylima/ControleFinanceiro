@@ -1,6 +1,7 @@
 controleFinanceiroAPP.service('MovimentacaoService', function ($http, $q) {
 
-  var movimentacao={};
+
+
   this.buscarTodas = function () {
     var defer = $q.defer();
     $http.get("http://localhost:8080/movimentacao")
@@ -52,9 +53,16 @@ controleFinanceiroAPP.service('MovimentacaoService', function ($http, $q) {
   this.setMovimentacao = function (movimentacao) {
     this.movimentacao = movimentacao;
   }
+  this.setMovimentacoes = function (movimentacoes) {
+    this.movimentacoes = movimentacoes;
+  }
 
   this.getMovimentacao = function () {
     return this.movimentacao;
+  }
+
+  this.getMovimentacoes = function () {
+    return this.movimentacoes;
   }
 
 })
