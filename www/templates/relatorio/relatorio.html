@@ -17,7 +17,11 @@
         </md-button>
       </div>
 
-      <div id="divRelatorio"></div>
+      <div id="divRelatorio" ng-show="exibirGrafico"></div>
+      <div layout="column" align="center" ng-show="!exibirGrafico">
+        <img  layout-padding layout-margin src="./img/icon/ic_triste.svg"/>
+        <strong>Você ainda não cadastrou nenhuma despesa !</strong>
+      </div>
     </div>
   </ion-content>
 </ion-view>

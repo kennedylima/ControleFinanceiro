@@ -85,7 +85,8 @@ controleFinanceiroAPP.controller("RelatorioController", function ($scope,$cordov
             yAxes: [{
               ticks: {
                 fontSize: 10
-              }
+              },
+              stacked: true
             }]
           }
         }
@@ -138,7 +139,9 @@ controleFinanceiroAPP.controller("RelatorioController", function ($scope,$cordov
               && $scope.movimentacoes[i].valor > 0
               && $scope.movimentacoes[i].tipo == "DESPESA") {
               $scope.categorias[j].totalGasto += $scope.movimentacoes[i].valor;
+              $scope.exibirGrafico = true;
             }
+
           }
 
           if ($scope.categorias[j].totalGasto > 0) {
@@ -149,6 +152,7 @@ controleFinanceiroAPP.controller("RelatorioController", function ($scope,$cordov
           $scope.categorias.cor.push(gerardorDeCorRGB());
 
         }
+
         $scope.graficoEmBarra();
 
 

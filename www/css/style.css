@@ -101,3 +101,12 @@ strong{
   color: #ffffff !important;
 }
 
+.valor input:not(:focus){
+  color:rgba(0,0,0,0.87) !important;
+  border-color: rgba(0,0,0,0.12) !important;
+}
+
+
+#movimentacaoForm  .md-input-container{
+  padding-bottom: -200px !important;
+}

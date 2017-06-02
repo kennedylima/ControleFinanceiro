@@ -1,8 +1,10 @@
 <ion-view view-title="Movimentação" cache-view="false" ng-cloak>
   <ion-content>
-    <form name="form" layout="column" layout-padding>
+    <form name="form" layout-margin >
 
-        <md-input-container  class="md-block">
+      <div layout="column">
+
+        <md-input-container>
           <strong>Tipo</strong>
           <md-input-container>
             <md-radio-group  ng-model="movimentacao.tipo" layout="row" required>
@@ -13,35 +15,36 @@
           <div ng-show="requerido && userForm.radioSexo.$invalid " ng-message="required">Campo Obrigatorio.</div>
         </md-input-container>
 
-      <md-input-container >
-      <label>Categoria</label>
-      <md-select ng-model="movimentacao.categoria"  required>
-        <md-option ng-repeat="categoria in categorias | orderBy:'descricao'"  ng-value="categoria" ng-selected="movimentacao.categoria.id == categoria.id" >
-          {{categoria.descricao}}
-        </md-option>
-      </md-select>
-      </md-input-container>
+        <md-input-container>
+          <label>Categoria</label>
+          <md-select ng-model="movimentacao.categoria"  required>
+            <md-option ng-repeat="categoria in categorias | orderBy:'descricao'"  ng-value="categoria" ng-selected="movimentacao.categoria.id == categoria.id" >
+              {{categoria.descricao}}
+            </md-option>
+          </md-select>
+        </md-input-container>
 
-      <md-input-container >
-        <label>Descricao</label>
-        <input ng-model="movimentacao.descricao" >
-        <div ng-show="requerido && form.nome.$invalid " ng-message="required">Campo  Obrigatorio.</div>
-      </md-input-container>
+        <md-input-container >
+          <label>Descricao</label>
+          <input ng-model="movimentacao.descricao" >
+          <div ng-show="requerido && form.nome.$invalid " ng-message="required">Campo  Obrigatorio.</div>
+        </md-input-container>
 
-      <md-input-container >
-        <label>Valor</label>
-        <input ng-model="movimentacao.valor" ui-money-mask required>
-        <div ng-show="requerido && form.nome.$invalid "  ng-message="required">Campo  Obrigatorio.</div>
-      </md-input-container>
+        <md-input-container class="valor" >
+          <label>Valor</label>
+          <input  type="tel" ng-model="movimentacao.valor" ui-money-mask required>
+          <div ng-show="requerido && form.nome.$invalid "  ng-message="required">Campo  Obrigatorio.</div>
+        </md-input-container>
 
-      <md-input-container >
-        <label>Data</label>
-        <md-datepicker ng-model="movimentacao.data" md-placeholder="Insira uma data" required></md-datepicker>
-        <div ng-show="requerido" ng-message="required" style="font-family: Arial; color:#d9301c;font-size:12px" >Campo Obrigatorio.</div>
-      </md-input-container>
+        <md-input-container >
+          <label>Data</label>
+          <md-datepicker ng-model="movimentacao.data" md-placeholder="Insira uma data" required></md-datepicker>
+          <div ng-show="requerido" ng-message="required" style="font-family: Arial; color:#d9301c;font-size:12px" >Campo Obrigatorio.</div>
+        </md-input-container>
 
-      <md-button class="md-raised md-primary botao" ng-disabled="form.$invalid" ng-click="salvar($event)"> Salvar</md-button>
+        <md-button class="md-raised md-primary botao" ng-disabled="form.$invalid" ng-click="salvar($event)"> Salvar</md-button>
 
+      </div>
 
     </form>
   </ion-content>
